@@ -23,11 +23,14 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
+import android.util.DisplayMetrics;
 import android.widget.ImageButton;
 import android.widget.ScrollView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.fragment.app.Fragment;
 import com.google.ads.interactivemedia.v3.samples.samplevideoplayer.SampleVideoPlayer;
 import com.google.android.exoplayer2.ui.PlayerView;
@@ -185,18 +188,29 @@ public class MyActivity extends AppCompatActivity {
         public void onVideoFragmentCreated(View rootView) {
             PlayerView videoView = rootView.findViewById(R.id.videoView);
             mVideoPlayer = new SampleVideoPlayer(rootView.getContext(), videoView);
-            mVideoPlayer.enableControls(false);
             mSampleAdsWrapper = new SampleAdsWrapper(rootView.getContext(),
                     mVideoPlayer, (ViewGroup) rootView.findViewById(R.id.adUiContainer));
             mSampleAdsWrapper.setFallbackUrl(FALLBACK_STREAM_URL);
 
             final TextView descTextView = rootView.findViewById(R.id.playerDescription);
-            final ScrollView scrollView = rootView.findViewById(R.id.logScroll);
             final TextView logTextView = rootView.findViewById(R.id.logText);
 
             if (descTextView != null) {
                 descTextView.setText(mVideoListItem.getTitle());
             }
+
+            ScrollView container = rootView.findViewById(R.id.container);
+            container.setOverScrollMode(View.OVER_SCROLL_ALWAYS);
+            container.setSmoothScrollingEnabled(true);
+
+            // Make the dummyScrollContent height the size of the screen height.
+            DisplayMetrics displayMetrics = new DisplayMetrics();
+            MyActivity.this.getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+            ConstraintLayout constraintLayout = rootView.findViewById(R.id.constraintLayout);
+            ConstraintSet forceHeight = new ConstraintSet();
+            forceHeight.clone(constraintLayout);
+            forceHeight.constrainHeight(R.id.dummyScrollContent, displayMetrics.heightPixels);
+            forceHeight.applyTo(constraintLayout);
 
             mSampleAdsWrapper.setLogger(new SampleAdsWrapper.Logger() {
                 @Override
@@ -204,14 +218,6 @@ public class MyActivity extends AppCompatActivity {
                     Log.i(APP_LOG_TAG, logMessage);
                     if (logTextView != null) {
                         logTextView.append(logMessage);
-                    }
-                    if (scrollView != null) {
-                        scrollView.post(new Runnable() {
-                            @Override
-                            public void run() {
-                                scrollView.fullScroll(View.FOCUS_DOWN);
-                            }
-                        });
                     }
                 }
             });
@@ -225,7 +231,6 @@ public class MyActivity extends AppCompatActivity {
                     if (mBookmarks.containsKey(mVideoListItem.getId())) {
                         bookMarkTime = mBookmarks.get(mVideoListItem.getId());
                     }
-                    mVideoPlayer.enableControls(true);
                     mVideoPlayer.setCanSeek(true);
                     mSampleAdsWrapper.requestAndPlayAds(mVideoListItem, bookMarkTime);
                     mPlayButton.setVisibility(View.GONE);

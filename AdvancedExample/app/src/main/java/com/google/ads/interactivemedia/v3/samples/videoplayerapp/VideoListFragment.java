@@ -38,6 +38,10 @@ public class VideoListFragment extends Fragment {
 
     public VideoListItem[] getVideoListItems() {
         return new VideoListItem[] {
+            new VideoListItem("Live Stream - IAB IMA OMID Certification", "MvlSRzVeSBGp2BLno3MxPQ",
+                null, null, null, StreamFormat.HLS, null),
+            new VideoListItem("VOD Stream - IAB IMA OMID Certification", null, null, "2490201",
+                "iab-ima-omid-certification-vod", StreamFormat.HLS, null),
             new VideoListItem("Live Video - Big Buck Bunny", "sN_IYUG8STe1ZzhIIE_ksA", null, null,
                     null, StreamFormat.HLS, null),
             new VideoListItem("VOD - Google I/O", null, null, "19463", "googleio-highlights",

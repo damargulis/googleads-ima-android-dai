@@ -106,6 +106,7 @@ public class SampleVideoPlayer {
         mPlayer = ExoPlayerFactory.newSimpleInstance(new DefaultRenderersFactory(mContext),
                 trackSelector, new DefaultLoadControl(), drmSessionManager);
         mPlayerView.setPlayer(mPlayer);
+        mPlayerView.setUseController(false);
         mPlayerView.setControlDispatcher(new ControlDispatcher() {
             @Override
             public boolean dispatchSetPlayWhenReady(Player player, boolean playWhenReady) {

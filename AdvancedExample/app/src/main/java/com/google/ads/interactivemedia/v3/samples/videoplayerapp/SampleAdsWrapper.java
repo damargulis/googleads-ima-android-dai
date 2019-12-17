@@ -195,7 +195,6 @@ public class SampleAdsWrapper implements AdEvent.AdEventListener, AdErrorEvent.A
             public void onAdBreakStarted() {
                 // Disable player controls.
                 mVideoPlayer.setCanSeek(false);
-                mVideoPlayer.enableControls(false);
                 log("Ad Break Started\n");
             }
 
@@ -203,7 +202,6 @@ public class SampleAdsWrapper implements AdEvent.AdEventListener, AdErrorEvent.A
             public void onAdBreakEnded() {
                 // Re-enable player controls.
                 mVideoPlayer.setCanSeek(true);
-                mVideoPlayer.enableControls(true);
                 if (mSnapBackTime > 0) {
                     Log.i("IMA", "SampleAdsWrapper seeking " + mSnapBackTime);
                     mVideoPlayer.seekTo(Math.round(mSnapBackTime * 1000));
